@@ -1,0 +1,20 @@
+﻿@page "/contacts/{Id}"
+@inject ContactDataAccessLayer.IContactService service
+@inject NavigationManager NavigationManager
+
+<h3>@ContactInContext.ContactName</h3>
+
+<ContactDetails ContactObject=ContactInContext></ContactDetails>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Contact ContactInContext;
+
+    protected override async void OnParametersSet()
+    {
+        ContactInContext = await service.Get(Int32.Parse(Id));
+    }
+}
+

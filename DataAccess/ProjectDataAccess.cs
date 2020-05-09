@@ -9,15 +9,15 @@ namespace DesignManagement.DataAccess
 {
     public class ProjectDataAccessLayer
     {
-        public interface IProjectsService
+        public interface IProjectService
         {
             Task<List<Project>> Get();
             Task<Project> Get(int id);
-            Task<Project> Add(Project project);
-            Task<Project> Update(Project project);
+            Task<Project> Add(Project contact);
+            Task<Project> Update(Project contact);
             Task<Project> Delete(int id);
         }
-        public class ProjectsService : IProjectsService
+        public class ProjectsService : IProjectService
         {
             private readonly DesignMgmtContext _context;
 
@@ -32,30 +32,30 @@ namespace DesignManagement.DataAccess
 
             public async Task<Project> Get(int id)
             {
-                var project = await _context.Projects.FindAsync(id);
-                return project;
+                var contact = await _context.Projects.FindAsync(id);
+                return contact;
             }
 
-            public async Task<Project> Add(Project project)
+            public async Task<Project> Add(Project contact)
             {
-                _context.Projects.Add(project);
+                _context.Projects.Add(contact);
                 await _context.SaveChangesAsync();
-                return project;
+                return contact;
             }
 
-            public async Task<Project> Update(Project project)
+            public async Task<Project> Update(Project contact)
             {
-                _context.Entry(project).State = EntityState.Modified;
+                _context.Entry(contact).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
-                return project;
+                return contact;
             }
 
             public async Task<Project> Delete(int id)
             {
-                var project = await _context.Projects.FindAsync(id);
-                _context.Projects.Remove(project);
+                var contact = await _context.Projects.FindAsync(id);
+                _context.Projects.Remove(contact);
                 await _context.SaveChangesAsync();
-                return project;
+                return contact;
             }
         }
     }

@@ -1,0 +1,14 @@
+﻿@page "/contacts/create"
+@inject ContactDataAccessLayer.IContactService service
+@inject NavigationManager NavigationManager
+
+<h3>Новый контакт</h3>
+
+<ContactDetails ContactObject=NewContact></ContactDetails>
+
+
+
+@code {
+    
+    Contact NewContact = new Contact();
+}

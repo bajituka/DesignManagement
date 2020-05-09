@@ -1,0 +1,84 @@
+﻿@inject ContactDataAccessLayer.IContactService service
+@inject NavigationManager NavigationManager
+
+    <EditForm Model="@ContactObject" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="firstName">Имя</label>
+                    <input type="hidden" @bind-value="@ContactObject.Id" />
+                    <InputText id="firstName" class="form-control" @bind-Value="@ContactObject.FirstName" />
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="lastName">Фамилия</label>
+                    <InputText id="lastName" class="form-control" @bind-Value="@ContactObject.LastName" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="email">Электронная почта</label>
+                    <InputText id="email" class="form-control" @bind-Value="@ContactObject.Email" />
+                </div>
+            </div>
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="phone">Телефон</label>
+                    <InputText id="phone" class="form-control" @bind-Value="@ContactObject.Phone" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="form-group">
+                    <label for="contactType">Тип контакта</label>
+                    <InputSelect id="contactType" class="form-control" @bind-Value="@ContactObject.Type">
+                        @foreach (ContactType type in Enum.GetValues(typeof(ContactType)))
+                        {
+                            <option value="@type">@DisplayName(type)</option>
+                        }
+                    </InputSelect>
+                </div>
+            </div>
+        </div>
+
+            <ValidationSummary />
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+            <button type="button" class="btn btn-secondary" @onclick="NavigateToContacts">Отмена</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Contact ContactObject { get; set; }
+
+    public string DisplayName(ContactType type)
+    {
+        string DisplayName = Extensions.GetDisplayName(type);
+        return DisplayName;
+    }
+
+    private async void HandleValidSubmit()
+    {
+        if (ContactObject.Id == 0)
+        {
+            await service.Add(ContactObject);
+        } else
+        {
+            await service.Update(ContactObject);
+        }
+        NavigateToContacts();
+
+    }
+
+    private void NavigateToContacts()
+    {
+        NavigationManager.NavigateTo("/contacts", true);
+    }
+}

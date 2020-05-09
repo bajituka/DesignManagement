@@ -33,8 +33,9 @@ namespace DesignManagement
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddDbContext<DesignMgmtContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddTransient<ProjectDataAccessLayer.IProjectsService, ProjectDataAccessLayer.ProjectsService>();
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddTransient<ProjectDataAccessLayer.IProjectService, ProjectDataAccessLayer.ProjectsService>();
+            services.AddTransient<ContactDataAccessLayer.IContactService, ContactDataAccessLayer.ContactsService>();
             services.Configure<RequestLocalizationOptions>(
                 options =>
                 {
