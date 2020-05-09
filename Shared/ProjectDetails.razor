@@ -1,59 +1,59 @@
 ﻿@inject ProjectDataAccessLayer.IProjectsService service
 @inject NavigationManager NavigationManager
 
-<EditForm Model="@ProjectObject" OnValidSubmit="@HandleValidSubmit">
-    <DataAnnotationsValidator />
+    <EditForm Model="@ProjectObject" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
 
-    <div class="form-group">
-        <label for="name">Название</label>
-        <input type="hidden" @bind-value="@ProjectObject.Id" />
-        <InputText id="name" class="form-control" @bind-Value="@ProjectObject.Name" />
-    </div>
-    <div class="form-group">
-        <label for="DesignStartDate">Начало дизайна</label>
-        <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.DesignStartDate" />
-    </div>
-    <div class="form-group">
-        <label for="DesignEndDate">Завершение дизайна</label>
-        <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.DesignEndDate" />
-    </div>
-    <div class="form-group">
-        <label for="DesignStartDate">Начало строительства</label>
-        <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.ConstructionStartDate" />
-    </div>
-    <div class="form-group">
-        <label for="DesignEndDate">Завершение строительства</label>
-        <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.ConstructionEndDate" />
-    </div>
-    <div class="form-group">
-        <label for="realEstateType">Тип недвижимости</label>
-        <InputSelect id="realEstateType" class="form-control" @bind-Value="@ProjectObject.RealEstateType">
-            @foreach (RealEstateType type in Enum.GetValues(typeof(RealEstateType)))
-            {
-                <option value="@type">@DisplayName(type)</option>
-            }
-        </InputSelect>
-    </div>
-    <div class="form-group">
-        <label for="area">Площадь</label>
-        <InputNumber id="area" class="form-control" @bind-Value="@ProjectObject.Area" />
-    </div>
-    <div class="form-group">
-        <label for="Price">Цена за кв. м.</label>
-        <InputNumber id="Price" class="form-control" @bind-Value="@ProjectObject.Price" />
-    </div>
-    <div class="form-group">
-        <label for="client">Заказчик</label>
-        <InputNumber id="client" class="form-control" @bind-Value="@ProjectObject.Client" />
-    </div>
-    <div class="form-group">
-        <label for="designSupervision">Авторский наздор</label>
-        <InputCheckbox id="designSupervision" class="form-control" @bind-Value="@ProjectObject.HasDesignSupervision" />
-    </div>
-    <ValidationSummary />
-    <button type="submit" class="btn btn-primary" @onclick="HandleValidSubmit">Сохранить</button>
-    <button type="button" class="btn btn-secondary" @onclick="NavigateToProjects">Отмена</button>
-</EditForm>
+        <div class="form-group">
+            <label for="name">Название</label>
+            <input type="hidden" @bind-value="@ProjectObject.Id" />
+            <InputText id="name" class="form-control" @bind-Value="@ProjectObject.Name" />
+        </div>
+        <div class="form-group">
+            <label for="DesignStartDate">Начало дизайна</label>
+            <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.DesignStartDate" />
+        </div>
+        <div class="form-group">
+            <label for="DesignEndDate">Завершение дизайна</label>
+            <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.DesignEndDate" />
+        </div>
+        <div class="form-group">
+            <label for="DesignStartDate">Начало строительства</label>
+            <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.ConstructionStartDate" />
+        </div>
+        <div class="form-group">
+            <label for="DesignEndDate">Завершение строительства</label>
+            <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.ConstructionEndDate" />
+        </div>
+        <div class="form-group">
+            <label for="realEstateType">Тип недвижимости</label>
+            <InputSelect id="realEstateType" class="form-control" @bind-Value="@ProjectObject.RealEstateType">
+                @foreach (RealEstateType type in Enum.GetValues(typeof(RealEstateType)))
+                {
+                    <option value="@type">@DisplayName(type)</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="form-group">
+            <label for="area">Площадь</label>
+            <InputNumber id="area" class="form-control" pattern="^\d*(\.\d{0,2})?$" @bind-Value="@ProjectObject.Area" />
+        </div>
+        <div class="form-group">
+            <label for="Price">Цена</label>
+            <InputNumber id="Price" class="form-control" @bind-Value="@ProjectObject.Price" />
+        </div>
+        <div class="form-group">
+            <label for="client">Заказчик</label>
+            <InputNumber id="client" class="form-control" @bind-Value="@ProjectObject.Client" />
+        </div>
+        <div class="form-group">
+            <label for="designSupervision">Авторский наздор</label>
+            <InputCheckbox id="designSupervision" class="form-control" @bind-Value="@ProjectObject.HasDesignSupervision" />
+        </div>
+        <ValidationSummary />
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <button type="button" class="btn btn-secondary" @onclick="NavigateToProjects">Отмена</button>
+    </EditForm>
 
 @code {
     [Parameter]
@@ -80,6 +80,6 @@
 
     private void NavigateToProjects()
     {
-        NavigationManager.NavigateTo("/projects");
+        NavigationManager.NavigateTo("/projects", true);
     }
 }
