@@ -1,5 +1,6 @@
 ﻿@page "/projects"
-@inject ProjectDataAccessLayer.IProjectService service
+@inject ProjectDataAccessLayer.IProjectService projectService
+@inject ContactDataAccessLayer.IContactService contactService
 @inject NavigationManager NavigationManager
 
 <h1>Проекты</h1>
@@ -20,12 +21,12 @@ else
                 <th>Название</th>
                 <th>Начало дизайна</th>
                 <th>Завершение дизайна</th>
-                <th>Начало строительства</th>
-                <th>Завершение строительства</th>
                 <th>Тип недвижимости</th>
                 <th>Площадь</th>
                 <th>Стоимость проекта</th>
                 <th>Заказчик</th>
+                <th>Телефон</th>
+                <th>Эл. почта</th>
                 <th>Авторский надзор</th>
                 <th>Действия</th>
             </tr>
@@ -33,19 +34,19 @@ else
         <tbody>
             @foreach (var project in ProjectsList)
             {
-                <tr>
-                    <td><a @onclick="(() => PrepareForEdit(project.Id))">@project.Name</a></td>
-                    <td>@project.DesignStartDate.Date.ToShortDateString()</td>
-                    <td>@project.DesignEndDate.Date.ToShortDateString()</td>
-                    <td>@project.ConstructionStartDate.Date.ToShortDateString()</td>
-                    <td>@project.ConstructionEndDate.Date.ToShortDateString()</td>
-                    <td>@project.RealEstateType.GetDisplayName()</td>
-                    <td>@project.Area</td>
-                    <td>@project.Price</td>
-                    <td>@project.Client</td>
-                    <td>@(project.HasDesignSupervision.Equals(true)?"Да":"Нет")</td>
-                    <td><button class="btn btn-danger" @onclick="(() => DeleteRecord(project.Id))">Удалить</button></td>
-                </tr>
+            <tr>
+                <td><a @onclick="(() => PrepareForEdit(project.Id))">@project.Name</a></td>
+                <td>@project.DesignStartDate.Date.ToShortDateString()</td>
+                <td>@project.DesignEndDate.Date.ToShortDateString()</td>
+                <td>@project.RealEstateType.GetDisplayName()</td>
+                <td>@project.Area</td>
+                <td>@project.Price</td>
+                <td>@project.Client.ContactName</td>
+                <td>@project.Client.Phone</td>
+                <td>@project.Client.Email</td>
+                <td>@(project.HasDesignSupervision.Equals(true)?"Да":"Нет")</td>
+                <td><button class="btn btn-danger" @onclick="(() => DeleteRecord(project.Id))">Удалить</button></td>
+            </tr>
             }
         </tbody>
     </table>
@@ -55,15 +56,17 @@ else
 
 @code {
     List<Project> ProjectsList;
+    List<Contact> ContactsList;
 
     protected override async Task OnInitializedAsync()
     {
-        ProjectsList = await service.Get();
+        ProjectsList = await projectService.Get();
+        ContactsList = await contactService.Get();
     }
 
     private async void DeleteRecord(int id)
     {
-        await service.Delete(id);
+        await projectService.Delete(id);
         NavigationManager.NavigateTo("/projects", true);
     }
 

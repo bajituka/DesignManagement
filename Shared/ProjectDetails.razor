@@ -1,104 +1,115 @@
-﻿@inject ProjectDataAccessLayer.IProjectService service
+﻿@inject ProjectDataAccessLayer.IProjectService projectService
+@inject ContactDataAccessLayer.IContactService contactService
 @inject NavigationManager NavigationManager
+@using LoreSoft.Blazor.Controls
 
-    <EditForm Model="@ProjectObject" OnValidSubmit="@HandleValidSubmit">
-        <DataAnnotationsValidator />
+<EditForm Model="@ProjectObject" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
 
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="form-group">
-                    <label for="name">Название</label>
-                    <input type="hidden" @bind-value="@ProjectObject.Id" />
-                    <InputText id="name" class="form-control" @bind-Value="@ProjectObject.Name" />
-                </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="name">Название</label>
+                <input type="hidden" @bind-value="@ProjectObject.Id" />
+                <InputText id="name" class="form-control" @bind-Value="@ProjectObject.Name" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="DesignStartDate">Начало дизайна</label>
+                <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.DesignStartDate" />
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="DesignEndDate">Завершение дизайна</label>
+                <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.DesignEndDate" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="DesignStartDate">Начало строительства</label>
+                <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.ConstructionStartDate" />
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="DesignEndDate">Завершение строительства</label>
+                <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.ConstructionEndDate" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="realEstateType">Тип недвижимости</label>
+                <InputSelect id="realEstateType" class="form-control" @bind-Value="@ProjectObject.RealEstateType">
+                    @foreach (RealEstateType type in Enum.GetValues(typeof(RealEstateType)))
+                    {
+                        <option value="@type">@DisplayName(type)</option>
+                    }
+                </InputSelect>
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="DesignStartDate">Начало дизайна</label>
-                    <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.DesignStartDate" />
-                </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="area">Площадь</label>
+                <InputNumber id="area" class="form-control" pattern="^\d*(\.\d{0,2})?$" @bind-Value="@ProjectObject.Area" />
             </div>
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="DesignEndDate">Завершение дизайна</label>
-                    <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.DesignEndDate" />
-                </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="Price">Цена</label>
+                <InputNumber id="Price" class="form-control" @bind-Value="@ProjectObject.Price" />
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="DesignStartDate">Начало строительства</label>
-                    <InputDate id="DesignStartDate" class="form-control" @bind-Value="@ProjectObject.ConstructionStartDate" />
-                </div>
-            </div>
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="DesignEndDate">Завершение строительства</label>
-                    <InputDate id="DesignEndDate" class="form-control" @bind-Value="@ProjectObject.ConstructionEndDate" />
-                </div>
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="client">Заказчик</label>
+
+                <BlazoredTypeahead SearchMethod="SearchContact" @bind-Value="@ProjectObject.Client">
+                    <SelectedTemplate Context="Contact">@Contact.ContactName</SelectedTemplate>
+                    <ResultTemplate Context="Contact">@Contact.ContactName</ResultTemplate>
+                    <NotFoundTemplate>Ничего не найдено</NotFoundTemplate>
+                </BlazoredTypeahead>
+
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="realEstateType">Тип недвижимости</label>
-                    <InputSelect id="realEstateType" class="form-control" @bind-Value="@ProjectObject.RealEstateType">
-                        @foreach (RealEstateType type in Enum.GetValues(typeof(RealEstateType)))
-                        {
-                            <option value="@type">@DisplayName(type)</option>
-                        }
-                    </InputSelect>
-                </div>
-            </div>
+    </div>
 
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="area">Площадь</label>
-                    <InputNumber id="area" class="form-control" pattern="^\d*(\.\d{0,2})?$" @bind-Value="@ProjectObject.Area" />
-                </div>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-check">
+                <InputCheckbox id="designSupervision" class="form-check-input" @bind-Value="@ProjectObject.HasDesignSupervision" />
+                <label for="designSupervision">Авторский наздор</label>
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="Price">Цена</label>
-                    <InputNumber id="Price" class="form-control" @bind-Value="@ProjectObject.Price" />
-                </div>
-            </div>
-
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label for="client">Заказчик</label>
-                    <InputNumber id="client" class="form-control" @bind-Value="@ProjectObject.Client" />
-                </div>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="form-check">
-                    <InputCheckbox id="designSupervision" class="form-check-input" @bind-Value="@ProjectObject.HasDesignSupervision" />
-                    <label for="designSupervision">Авторский наздор</label>
-                </div>
-            </div>
-        </div>
-
-            <ValidationSummary />
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <button type="button" class="btn btn-secondary" @onclick="NavigateToProjects">Отмена</button>
+    <ValidationSummary />
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-secondary" @onclick="NavigateToProjects">Отмена</button>
 </EditForm>
 
 @code {
     [Parameter]
     public Project ProjectObject { get; set; }
+
+    public List<Contact> ClientsList { get; set; }
+    public Contact SelectedClient;
 
     public string DisplayName(RealEstateType type)
     {
@@ -110,10 +121,11 @@
     {
         if (ProjectObject.Id == 0)
         {
-            await service.Add(ProjectObject);
-        } else
+            await projectService.Add(ProjectObject);
+        }
+        else
         {
-            await service.Update(ProjectObject);
+            await projectService.Update(ProjectObject);
         }
         NavigateToProjects();
 
@@ -123,4 +135,19 @@
     {
         NavigationManager.NavigateTo("/projects", true);
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ClientsList = await contactService.Get();
+    }
+
+    public Task<IEnumerable<Contact>> SearchContact(string searchText)
+    {
+        var result = ClientsList
+            .Where(x => x.ContactName.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return Task.FromResult<IEnumerable<Contact>>(result);
+    }
+
 }

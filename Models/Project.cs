@@ -13,7 +13,7 @@ namespace DesignManagement.Models
         [Required(ErrorMessage = "Заполните поле Название")]
         [StringLength(256, ErrorMessage = "Слишком длинное название")]
         public string Name { get; set; }
-
+#nullable enable
         [DataType(DataType.Date), Range(typeof(DateTime), "1/1/1991", "1/1/2100")]
         public DateTime DesignStartDate { get; set; } = DateTime.Today;
 
@@ -36,7 +36,9 @@ namespace DesignManagement.Models
         [DisplayFormat(DataFormatString = "{0:C}")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal? Price { get; set; }
-        public int? Client { get; set; }
+        public Contact? Client { get; set; }
         public bool HasDesignSupervision { get; set; } = false;
+
+#nullable disable
     }
 }
