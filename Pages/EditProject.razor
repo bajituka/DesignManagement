@@ -1,0 +1,20 @@
+﻿@page "/projects/{Id}"
+@inject ProjectDataAccessLayer.IProjectsService service
+@inject NavigationManager NavigationManager
+
+<h3>Current Project</h3>
+
+<ProjectDetails ProjectObject=ProjectInContext></ProjectDetails>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Project ProjectInContext;
+
+    protected override async void OnParametersSet()
+    {
+        ProjectInContext = await service.Get(Int32.Parse(Id));
+    }
+}
+

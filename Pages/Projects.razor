@@ -1,0 +1,74 @@
+﻿@page "/projects"
+@inject ProjectDataAccessLayer.IProjectsService service
+@inject NavigationManager NavigationManager
+
+<h1>Проекты</h1>
+
+@if (ProjectsList == null)
+{
+    <p><em>Загрузка...</em></p>
+}
+else
+{
+    <div>
+        <a href="projects/create">Новый проект</a>
+        @*<button type="button" class="btn btn-primary" value="New" />*@
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Начало дизайна</th>
+                <th>Завершение дизайна</th>
+                <th>Начало строительства</th>
+                <th>Завершение строительства</th>
+                <th>Тип недвижимости</th>
+                <th>Площадь</th>
+                <th>Стоимость проекта</th>
+                <th>Заказчик</th>
+                <th>Авторский надзор</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var project in ProjectsList)
+            {
+                <tr>
+                    <td><a @onclick="(() => PrepareForEdit(project.Id))">@project.Name</a></td>
+                    <td>@project.DesignStartDate.Date.ToShortDateString()</td>
+                    <td>@project.DesignEndDate.Date.ToShortDateString()</td>
+                    <td>@project.ConstructionStartDate.Date.ToShortDateString()</td>
+                    <td>@project.ConstructionEndDate.Date.ToShortDateString()</td>
+                    <td>@project.RealEstateType.GetDisplayName()</td>
+                    <td>@project.Area</td>
+                    <td>@project.Price</td>
+                    <td>@project.Client</td>
+                    <td>@(project.HasDesignSupervision.Equals(true)?"Да":"Нет")</td>
+                    <td><button class="btn btn-danger" @onclick="(() => DeleteRecord(project.Id))">Удалить</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    List<Project> ProjectsList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProjectsList = await service.Get();
+    }
+
+    private async void DeleteRecord(int id)
+    {
+        await service.Delete(id);
+        NavigationManager.NavigateTo("/projects", true);
+    }
+
+    public void PrepareForEdit(int projectId)
+    {
+        NavigationManager.NavigateTo("/projects/" + projectId.ToString());
+    }
+}

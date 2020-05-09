@@ -1,0 +1,14 @@
+﻿@page "/projects/create"
+@inject ProjectDataAccessLayer.IProjectsService service
+@inject NavigationManager NavigationManager
+
+<h3>Новый проект</h3>
+
+<ProjectDetails ProjectObject=NewProject></ProjectDetails>
+
+
+
+@code {
+    
+    Project NewProject = new Project();
+}
