@@ -20,10 +20,12 @@ namespace DesignManagement.Models
         public string LastName { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public string ContactName { get; private set; }
+#nullable enable
         [Phone]
         public string? Phone { get; set; }
         [EmailAddress]
         public string? Email { get; set; }
+#nullable disable
         [Required]
         public ContactType Type { get; set; }
     }

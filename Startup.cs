@@ -30,7 +30,6 @@ namespace DesignManagement
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
             services.AddDbContext<DesignMgmtContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<ProjectDataAccessLayer.IProjectsService, ProjectDataAccessLayer.ProjectsService>();
