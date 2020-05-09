@@ -13,15 +13,27 @@ namespace DesignManagement.Models
         [Required(ErrorMessage = "Заполните поле Название")]
         [StringLength(256, ErrorMessage = "Слишком длинное название")]
         public string Name { get; set; }
+
+        [DataType(DataType.Date), Range(typeof(DateTime), "1/1/1991", "1/1/2100")]
         public DateTime DesignStartDate { get; set; } = DateTime.Today;
+
+        [DataType(DataType.Date), Range(typeof(DateTime), "1/1/1991", "1/1/2100")]
         public DateTime DesignEndDate { get; set; } = DateTime.Today.AddMonths(2);
+
+        [DataType(DataType.Date), Range(typeof(DateTime), "1/1/1991", "1/1/2100")]
         public DateTime ConstructionStartDate { get; set; } = DateTime.Today.AddMonths(3);
+
+        [DataType(DataType.Date), Range(typeof(DateTime), "1/1/1991", "1/1/2100")]
         public DateTime ConstructionEndDate { get; set; } = DateTime.Today.AddMonths(9);
         [Required(ErrorMessage = "Выберите тип недвижимости")]
         public RealEstateType RealEstateType { get; set; } = RealEstateType.Condo;
-        [Column(TypeName = "decimal(4,2)")]
+        
+        [Range(1, 9999.99)]
+        [Column(TypeName = "decimal(6,2)")]
         public decimal? Area { get; set; }
-        [Column(TypeName = "decimal(8,2)")]
+
+        [Range(1, 99999999), DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(10,2)")]
         public decimal? Price { get; set; }
         public int? Client { get; set; }
         public bool HasDesignSupervision { get; set; } = false;
