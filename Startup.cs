@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using DesignManagement.Models;
 using Microsoft.EntityFrameworkCore;
 using DesignManagement.DataAccess;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace DesignManagement
 {
@@ -33,6 +35,19 @@ namespace DesignManagement
             services.AddDbContext<DesignMgmtContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<ProjectDataAccessLayer.IProjectsService, ProjectDataAccessLayer.ProjectsService>();
+            services.Configure<RequestLocalizationOptions>(
+                options =>
+                {
+                    var supportedCultures = new List<CultureInfo>
+                        {
+                            new CultureInfo("en-US"),
+                            new CultureInfo("ru-RU")
+                        };
+
+                    options.DefaultRequestCulture = new RequestCulture(culture: "ru-RU", uiCulture: "ru-RU");
+                    options.SupportedCultures = supportedCultures;
+                    options.SupportedUICultures = supportedCultures;
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

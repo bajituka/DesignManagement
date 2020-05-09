@@ -33,6 +33,7 @@ namespace DesignManagement.Models
         public decimal? Area { get; set; }
 
         [Range(1, 99999999), DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "{0:C}")]
         [Column(TypeName = "decimal(10,2)")]
         public decimal? Price { get; set; }
         public int? Client { get; set; }
