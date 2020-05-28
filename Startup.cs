@@ -36,6 +36,9 @@ namespace DesignManagement
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<ProjectDataAccessLayer.IProjectService, ProjectDataAccessLayer.ProjectsService>();
             services.AddTransient<ContactDataAccessLayer.IContactService, ContactDataAccessLayer.ContactsService>();
+            services.AddTransient<OutfitDataAccessLayer.IOutfitService, OutfitDataAccessLayer.OutfitService>();
+            services.AddTransient<OutfitItemDataAccessLayer.IOutfitItemService, OutfitItemDataAccessLayer.OutfitItemService>();
+            services.AddTransient<SupplierDataAccessLayer.ISupplierService, SupplierDataAccessLayer.SupplierService>();
             services.Configure<RequestLocalizationOptions>(
                 options =>
                 {

@@ -1,0 +1,64 @@
+﻿@page "/outfits"
+@inject OutfitDataAccessLayer.IOutfitService outfitService
+@inject ProjectDataAccessLayer.IProjectService projectService
+@inject ContactDataAccessLayer.IContactService contactService
+@inject NavigationManager NavigationManager
+
+<h1>Комплектации</h1>
+
+@if (OutfitsList == null)
+{
+    <p><em>Загрузка...</em></p>
+}
+else
+{
+    <div>
+        <a href="outfits/create">Новая комплектация</a>
+        @*<button type="button" class="btn btn-primary" value="New" />*@
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Проект</th>
+                <th>Название</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var outfit in OutfitsList)
+            {
+                <tr>
+                    <td>@outfit.Project.Name</td>
+                    <td><a @onclick="(() => PrepareForEdit(outfit.Id))">@outfit.Name</a></td>
+                    <td><button class="btn btn-danger" @onclick="(() => DeleteRecord(outfit.Id))">Удалить</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    List<Project> ProjectsList;
+    List<Outfit> OutfitsList;
+    //List<Contact> ContactsList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProjectsList = await projectService.Get();
+        OutfitsList = await outfitService.Get();
+        //ContactsList = await contactService.Get();
+    }
+
+    private async void DeleteRecord(int id)
+    {
+        await outfitService.Delete(id);
+        NavigationManager.NavigateTo("/outfits", true);
+    }
+
+    public void PrepareForEdit(int outfitId)
+    {
+        NavigationManager.NavigateTo("/outfits/" + outfitId.ToString());
+    }
+}

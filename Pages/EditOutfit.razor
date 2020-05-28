@@ -1,0 +1,20 @@
+﻿@page "/outfits/{Id}"
+@inject OutfitDataAccessLayer.IOutfitService outfitService
+@inject NavigationManager NavigationManager
+
+<h3>@OutfitInContext.Name для @OutfitInContext.Project.Name</h3>
+
+<OutfitDetails OutfitObject=OutfitInContext></OutfitDetails>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Outfit OutfitInContext;
+
+    protected override async void OnParametersSet()
+    {
+        OutfitInContext = await outfitService.Get(Int32.Parse(Id));
+    }
+}
+

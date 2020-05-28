@@ -1,0 +1,86 @@
+﻿@inject OutfitDataAccessLayer.IOutfitService outfitService
+@inject ProjectDataAccessLayer.IProjectService projectService
+@inject ContactDataAccessLayer.IContactService contactService
+@inject NavigationManager NavigationManager
+@using LoreSoft.Blazor.Controls
+
+<EditForm Model="@OutfitObject" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="form-group">
+                <label for="name">Название</label>
+                <input type="hidden" @bind-value="@OutfitObject.Id" />
+                <InputText id="name" class="form-control" @bind-Value="@OutfitObject.Name" />
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="form-group">
+                <label for="client">Проект</label>
+
+                <BlazoredTypeahead SearchMethod="SearchProject" @bind-Value="@OutfitObject.Project">
+                    <SelectedTemplate Context="Project">@Project.Name</SelectedTemplate>
+                    <ResultTemplate Context="Project">@Project.Name</ResultTemplate>
+                    <NotFoundTemplate>Ничего не найдено</NotFoundTemplate>
+                </BlazoredTypeahead>
+
+            </div>
+        </div>
+    </div>
+
+    <ValidationSummary />
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-secondary" @onclick="NavigateToOutfits">Отмена</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public Outfit OutfitObject { get; set; }
+
+    public List<Project> ProjectsList { get; set; }
+    public Project SelectedProject;
+
+    public string DisplayName(RealEstateType type)
+    {
+        string DisplayName = Extensions.GetDisplayName(type);
+        return DisplayName;
+    }
+
+    private async void HandleValidSubmit()
+    {
+        if (OutfitObject.Id == 0)
+        {
+            await outfitService.Add(OutfitObject);
+        }
+        else
+        {
+            await outfitService.Update(OutfitObject);
+        }
+        NavigateToOutfits();
+
+    }
+
+    private void NavigateToOutfits()
+    {
+        NavigationManager.NavigateTo("/outfits", true);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProjectsList = await projectService.Get();
+    }
+
+    public Task<IEnumerable<Project>> SearchProject(string searchText)
+    {
+        var result = ProjectsList
+            .Where(x => x.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+
+        return Task.FromResult<IEnumerable<Project>>(result);
+    }
+
+}

@@ -1,0 +1,14 @@
+﻿@page "/outfits/create"
+@inject OutfitDataAccessLayer.IOutfitService outfitService
+@inject NavigationManager NavigationManager
+
+<h3>Новая комплектация</h3>
+
+<OutfitDetails OutfitObject=NewOutfit></OutfitDetails>
+
+
+
+@code {
+
+    Outfit NewOutfit = new Outfit();
+}
