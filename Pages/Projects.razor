@@ -41,9 +41,9 @@ else
                 <td>@project.RealEstateType.GetDisplayName()</td>
                 <td>@project.Area</td>
                 <td>@project.Price</td>
-                <td>@project.Client.ContactName</td>
-                <td>@project.Client.Phone</td>
-                <td>@project.Client.Email</td>
+                    <td>@if (project.Client != null) {@project.Client.ContactName}</td>
+                    <td>@if (project.Client != null) {@project.Client.Phone}</td>
+                    <td>@if (project.Client != null) {@project.Client.Email}</td>
                 <td>@(project.HasDesignSupervision.Equals(true)?"Да":"Нет")</td>
                 <td><button class="btn btn-danger" @onclick="(() => DeleteRecord(project.Id))">Удалить</button></td>
             </tr>
